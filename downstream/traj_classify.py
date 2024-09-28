@@ -1,4 +1,3 @@
-import nni
 import numpy as np
 import torch
 from sklearn.utils import shuffle
@@ -96,8 +95,6 @@ def fc_trajectory_classify(dataset, embed_model, pre_model, num_epoch, batch_siz
                 pres, labels = np.concatenate(pres), np.concatenate(labels)
                 acc, recall = accuracy_score(labels, pres), recall_score(labels, pres, average='macro')
                 score_log.append([acc, recall])
-                nni.report_intermediate_result(acc)
 
     best_acc, best_recall = np.max(score_log, axis=0)
     print('Acc %.6f, Recall %.6f' % (best_acc, best_recall))
-    nni.report_final_result(best_acc)

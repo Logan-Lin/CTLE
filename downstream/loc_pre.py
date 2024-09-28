@@ -1,6 +1,5 @@
 from abc import ABC
 
-import nni
 import numpy as np
 import torch
 from sklearn.metrics import accuracy_score, recall_score, f1_score, precision_score
@@ -348,12 +347,10 @@ def loc_prediction(dataset, pre_model, pre_len, num_epoch, batch_size, device):
                 acc, recall = accuracy_score(labels, pres), recall_score(labels, pres, average='macro')
                 f1_micro, f1_macro = f1_score(labels, pres, average='micro'), f1_score(labels, pres, average='macro')
                 score_log.append([acc, recall, f1_micro, f1_macro])
-                nni.report_intermediate_result(acc)
 
     best_acc, best_recall, best_f1_micro, best_f1_macro = np.max(score_log, axis=0)
     print('Acc %.6f, Recall %.6f' % (best_acc, best_recall))
     print('F1-micro %.6f, F1-macro %.6f' % (best_f1_micro, best_f1_macro))
-    nni.report_final_result(best_acc)
 
 
 class MCLocPredictor:

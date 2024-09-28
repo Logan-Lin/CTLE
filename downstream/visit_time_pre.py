@@ -1,7 +1,6 @@
 import math
 from abc import ABC
 
-import nni
 import numpy as np
 import torch
 from sklearn.metrics import mean_absolute_error, mean_squared_error, accuracy_score, recall_score
@@ -145,12 +144,10 @@ def erpp_visit_time_prediction(dataset, pre_model, pre_len, num_epoch, batch_siz
                             math.sqrt(mean_squared_error(time_labels, time_pres))
                 event_log.append([acc, recall])
                 time_log.append([mae, rmse])
-                nni.report_intermediate_result(mae)
 
     best_acc, best_rec = np.max(event_log, axis=0)
     best_mae, best_rmse = np.min(time_log, axis=0)
     print('Acc %.6f, Recall %.6f, MAE %.6f, RMSE %.6f' % (best_acc, best_rec, best_mae, best_rmse), flush=True)
-    nni.report_final_result(best_mae)
 
 
 class LSTMTimePredictor(nn.Module):
@@ -239,11 +236,9 @@ def lstm_visit_time_prediction(dataset, pre_model, num_epoch, batch_size, device
                                   mean_absolute_percentage_error(labels, pres), \
                                   math.sqrt(mean_squared_error(labels, pres))
                 score_log.append([mae, mape, rmse])
-                nni.report_intermediate_result(mae)
 
     best_mae, best_mape, best_rmse = np.min(score_log, axis=0)
     print('MAE %.6f, MAPE %.6f, RMSE %.6f' % (best_mae, best_mape, best_rmse), flush=True)
-    nni.report_final_result(best_mae)
 
 
 class ScatterVisitTimePredictor(nn.Module):
@@ -347,11 +342,9 @@ def scatter_visit_time_prediction(dataset, pre_model, time_output_type, num_epoc
                                   mean_absolute_percentage_error(labels, pres), \
                                   math.sqrt(mean_squared_error(labels, pres))
                 score_log.append([mae, mape, rmse])
-                nni.report_intermediate_result(mae)
 
     best_mae, best_mape, best_rmse = np.min(score_log, axis=0)
     print('MAE %.6f, MAPE %.6f, RMSE %.6f' % (best_mae, best_mape, best_rmse), flush=True)
-    nni.report_final_result(best_mae)
 
     import os
     torch.save(pre_model.state_dict(), os.path.join('data', 'model', 'downstream.model'))
